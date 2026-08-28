@@ -132,7 +132,34 @@
 		},
 		{
 			"name": "Users",
-			"item": []
+			"item": [
+				{
+					"name": "Change Role",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"role\": \"MODERATOR\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/{{userId}}/role",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", "{{userId}}", "role"]
+						}
+					},
+					"response": []
+				}
+			]
 		},
 		{
 			"name": "Posts",

@@ -33,7 +33,7 @@ public class ExceptionHandler {
     @org.springframework.web.bind.annotation.ExceptionHandler(AuthorizationDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN) // 403
     public ErrorsDTO handleForbiddenEx(AuthorizationDeniedException ex) {
-        return new ErrorsDTO("Non hai l'accesso a questa risorsa", LocalDateTime.now());
+        return new ErrorsDTO("Non hai l'autorizzazione per questa risorsa", LocalDateTime.now());
     }
 
 }

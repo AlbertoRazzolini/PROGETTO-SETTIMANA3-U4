@@ -1,8 +1,10 @@
 package com.example.progettosettimana3u4.services;
 
 import com.example.progettosettimana3u4.entities.User;
+import com.example.progettosettimana3u4.enums.Role;
 import com.example.progettosettimana3u4.exceptions.NotFoundException;
 import com.example.progettosettimana3u4.exceptions.ValidationException;
+import com.example.progettosettimana3u4.payloads.AssignRoleDTO;
 import com.example.progettosettimana3u4.payloads.NewUserReqDTO;
 import com.example.progettosettimana3u4.repositories.UsersRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,6 +37,20 @@ public class UsersService {
 
         User newUser = new User(payload.username(), payload.name(), payload.surname(), payload.email(), bcrypt.encode(payload.password()));
         return this.usersRepository.save(newUser);
+    }
+
+    public User findByIdAndUpdateRole(UUID userId, AssignRoleDTO body) {
+        User user = this.findById(userId);
+
+        Role newRole;
+        try {                                                  //Così faccio in modo tale che gli unici valori possano
+            newRole = Role.valueOf(body.role().toUpperCase()); //essere solo MEMBER o MODERATOR
+        } catch (IllegalArgumentException e) {
+            throw new ValidationException("Ruolo non valido, i valori ammessi sono MEMBER o MODERATOR");
+        }
+
+        user.setRole(newRole);
+        return this.usersRepository.save(user);
     }
 
 }

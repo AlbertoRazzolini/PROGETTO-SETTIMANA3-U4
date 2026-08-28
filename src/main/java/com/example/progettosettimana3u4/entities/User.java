@@ -46,7 +46,6 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @Setter(AccessLevel.NONE)
     private Role role;
 
     public User(String username, String name, String surname, String email, String password) {
