@@ -18,21 +18,17 @@ public class JWTTools {
 
 	public String generateToken(User user) {
 		return Jwts.builder()
-				.subject(String.valueOf(user.getId())) // subject, cioè a chi appartiene il token (ID DELL'UTENTE) N.B. NO DATI SENSIBILI!!!
-				.issuedAt(new Date(System.currentTimeMillis())) // IssuedAt (IaT) cioè data di emissione del token, va messa in millisecondi
-				.expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7)) // Expiration, cioè data di scadenza, va messa in millisecondi
-				.signWith(Keys.hmacShaKeyFor(secret.getBytes())) // Firmiamo il token (con l'algoritmo HMAC-SHA e il SECRET contenuto in application.properties) per l'integrità del token
-				.compact(); // Prende tutte le info di sopra e crea il token
+				.subject(String.valueOf(user.getId()))
+				.issuedAt(new Date(System.currentTimeMillis()))
+				.expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 10))
+				.signWith(Keys.hmacShaKeyFor(secret.getBytes()))
+				.compact();
 	}
 
 	public void verifyToken(String token) {
 		try {
 			Jwts.parser().verifyWith(Keys.hmacShaKeyFor(secret.getBytes())).build().parse(token);
-			// parse() legge il token e si accorge se qualcosa non va
-			// quindi lancerà un'eccezione se il token è scaduto
-			// un'altra eccezione se il token è stato modificato
-			// un'altra ancora se il token non è completo di tutte le sue parti
-		} catch (Exception ex) { // Con questo catch catturo tutte le possibili eccezioni e le "converto" in una sola UnauthorizedException
+		} catch (Exception ex) {
 			throw new UnauthorizedException("Token non valido rifare login!");
 		}
 	}

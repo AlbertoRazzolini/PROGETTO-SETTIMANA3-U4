@@ -5,8 +5,10 @@ import com.example.progettosettimana3u4.payloads.LoginReqDTO;
 import com.example.progettosettimana3u4.payloads.LoginRespDTO;
 import com.example.progettosettimana3u4.payloads.NewUserReqDTO;
 import com.example.progettosettimana3u4.payloads.NewUserRespDTO;
-import jakarta.validation.Valid;
+import com.example.progettosettimana3u4.services.AuthService;
+import com.example.progettosettimana3u4.services.UsersService;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /* ******************************* AUTH CRUD *********************************
@@ -20,18 +22,26 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 public class AuthController {
 
+    private final AuthService authService;
+    private final UsersService usersService;
+
+    public AuthController(AuthService authService, UsersService usersService) {
+        this.authService = authService;
+        this.usersService = usersService;
+    }
+
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/register")
-    public NewUserRespDTO createUser(@Valid @RequestBody NewUserReqDTO payload) {
+    public NewUserRespDTO createUser(@Validated @RequestBody NewUserReqDTO payload) {
 
-        User utenteCreato = this.userService.create(payload);
+        User utenteCreato = this.usersService.create(payload);
 
         return new NewUserRespDTO(utenteCreato.getId(), utenteCreato.getRole());
 
     }
 
     @PostMapping("/login")
-    public LoginRespDTO login(@Valid @RequestBody LoginReqDTO body) {
+    public LoginRespDTO login(@Validated @RequestBody LoginReqDTO body) {
 
         String accessToke = this.authService.checkCredentialsAndGenerateToken(body);
 
