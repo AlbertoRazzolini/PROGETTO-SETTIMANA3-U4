@@ -130,7 +130,7 @@
 								"exec": [
 									"if (pm.response.code === 200) {",
 									"    const body = pm.response.json();",
-									"    pm.collectionVariables.set('token', body.access_token);",
+									"    pm.collectionVariables.set('token', body.accessToken);",
 									"}"
 								]
 							}
