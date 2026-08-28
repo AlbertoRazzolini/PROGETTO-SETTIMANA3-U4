@@ -39,6 +39,11 @@
 			"key": "postId",
 			"value": "",
 			"type": "string"
+		},
+		{
+			"key": "likeId",
+			"value": "",
+			"type": "string"
 		}
 	],
 	"item": [
@@ -275,7 +280,58 @@
 		},
 		{
 			"name": "Likes",
-			"item": []
+			"item": [
+				{
+					"name": "Add Like",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/likes/{{postId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "likes", "{{postId}}"]
+						}
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const body = pm.response.json();",
+									"    pm.collectionVariables.set('likeId', body.id);",
+									"}"
+								]
+							}
+						}
+					],
+					"response": []
+				},
+				{
+					"name": "Remove Like",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/likes/{{likeId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "likes", "{{likeId}}"]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
