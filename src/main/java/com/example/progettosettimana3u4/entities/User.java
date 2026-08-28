@@ -37,15 +37,16 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String surname;
 
+    @Column(nullable = false, unique = true)
+    private String email;
+
     @JsonIgnore
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, unique = true)
-    private String email;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Setter(AccessLevel.NONE)
     private Role role;
 
     public User(String username, String name, String surname, String email, String password) {
