@@ -1,0 +1,146 @@
+{
+	"info": {
+		"name": "PROGETTO-SETTIMANA3-U4",
+		"description": "Collection per l'esercizio Users/Posts/Likes con autenticazione JWT e autorizzazione. Aggiornata via via che si implementano gli endpoint.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5174",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "userId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "regEmail",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "regUsername",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "regPassword",
+			"value": "password123",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"{{regUsername}}\",\n    \"name\": \"{{$randomFirstName}}\",\n    \"surname\": \"{{$randomLastName}}\",\n    \"email\": \"{{regEmail}}\",\n    \"password\": \"{{regPassword}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/register",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "register"]
+						}
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"// Genera username/email casuali ad ogni invio, così puoi rilanciare Register",
+									"// più volte senza incappare nel controllo di unicità (email/username già in uso).",
+									"// La password resta fissa (regPassword) per poterla riusare comodamente nel Login.",
+									"// Usiamo solo le ultime 8 cifre del timestamp per restare dentro il limite",
+									"// di NewUserReqDTO (@Size(min = 5, max = 15) sullo username).",
+									"const unique = Date.now().toString().slice(-8);",
+									"pm.collectionVariables.set('regUsername', 'user' + unique);",
+									"pm.collectionVariables.set('regEmail', 'user' + unique + '@example.com');"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const body = pm.response.json();",
+									"    pm.collectionVariables.set('userId', body.userId);",
+									"}"
+								]
+							}
+						}
+					],
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{regEmail}}\",\n    \"password\": \"{{regPassword}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "login"]
+						}
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const body = pm.response.json();",
+									"    pm.collectionVariables.set('token', body.access_token);",
+									"}"
+								]
+							}
+						}
+					],
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": []
+		},
+		{
+			"name": "Posts",
+			"item": []
+		},
+		{
+			"name": "Likes",
+			"item": []
+		}
+	]
+}
