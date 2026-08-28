@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 /* ******************************* AUTH CRUD *********************************
 
 1. POST http://localhost:5174/api/auth/register (+request.body), risponde 201 CREATED (nel payload l'utente creato)
-2. PUT http://localhost:5174/api/auth/login (+request.body)
+2. POST http://localhost:5174/api/auth/login (+request.body)
 
 */
 
