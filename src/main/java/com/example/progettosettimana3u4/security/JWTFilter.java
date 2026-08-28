@@ -31,17 +31,12 @@ public class JWTFilter extends OncePerRequestFilter {
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-		// Qua inseriamo il codice che verrà eseguito PER OGNI RICHIESTA
 
-		// 1. Controlliamo se la richiesta corrente ha un Authorization Header
-		// 2. Se non ce l'ha segnaliamo con 401
 		String header = request.getHeader("Authorization");
 		if (header == null || !header.startsWith("Bearer ")) throw new UnauthorizedException("Inserire il token nell'header");
 
-		// 3. Se ce l'ha estraiamo il token dall'header
 		String accessToken = header.replace("Bearer ", "");
 
-		// 4. Avendo il token possiamo ora controllare se è scaduto, se è malformato, se è stato manipolato
 		jwtTools.verifyToken(accessToken); // 5. Se il token non va bene -> ERRORE
 
 		// ************************************** AUTHORIZATION *************************************
@@ -54,19 +49,13 @@ public class JWTFilter extends OncePerRequestFilter {
 		// - verificare che una certa operazione di modifica/cancellazione la possa fare solo l'effettivo proprietario di tale risorsa
 		// - associare in fase di creazione di un Video l'effettivo proprietario di quel Video (e non usare l'id di altri!!!)
 
-
-		// 1. Cerchiamo l'utente nel DB tramite id
-		// 1.1 L'id al momento sta nel payload del token (il "subject")
 		UUID currentUserId = jwtTools.extractIdFromToken(accessToken);
-		// 1.2 Tramite il UserService facciamo findById
 		User currentUser = this.usersService.findById(currentUserId);
 
-		// 2. Associamo l'utente corrente alla richiesta corrente inserendolo nel SecurityContext
 		Authentication authentication = new UsernamePasswordAuthenticationToken(currentUser, null, currentUser.getAuthorities());
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
-		// 6. Se il token va bene andiamo avanti all'endpoint desiderato
-		filterChain.doFilter(request, response); // Se dimentico questo nel filtro, al controller non ci arriviamo mai
+		filterChain.doFilter(request, response);
 
 
 	}
