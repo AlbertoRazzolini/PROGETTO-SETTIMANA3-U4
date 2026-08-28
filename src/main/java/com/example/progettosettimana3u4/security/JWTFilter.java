@@ -57,13 +57,12 @@ public class JWTFilter extends OncePerRequestFilter {
 
 		filterChain.doFilter(request, response);
 
-
 	}
 
 	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-		// return request.getServletPath().equals("/api/auth/login"); // Diciamo al filtro di non intervenire per le richieste su /api/auth/login
+
 		return new AntPathMatcher().match("/api/auth/**", request.getServletPath());
-		// Diciamo al filtro di non intervenire per le richieste al controller Auth
+
 	}
 }

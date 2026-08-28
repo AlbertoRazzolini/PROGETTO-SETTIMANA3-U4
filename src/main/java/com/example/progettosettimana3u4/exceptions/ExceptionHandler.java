@@ -36,4 +36,10 @@ public class ExceptionHandler {
         return new ErrorsDTO("Non hai l'autorizzazione per questa risorsa", LocalDateTime.now());
     }
 
+    @org.springframework.web.bind.annotation.ExceptionHandler(ForbiddenException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN) // 403
+    public ErrorsDTO handleForbiddenEx(ForbiddenException ex) {
+        return new ErrorsDTO(ex.getMessage(), LocalDateTime.now());
+    }
+
 }

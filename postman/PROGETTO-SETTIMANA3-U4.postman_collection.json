@@ -34,6 +34,11 @@
 			"key": "regPassword",
 			"value": "password123",
 			"type": "string"
+		},
+		{
+			"key": "postId",
+			"value": "",
+			"type": "string"
 		}
 	],
 	"item": [
@@ -163,7 +168,110 @@
 		},
 		{
 			"name": "Posts",
-			"item": []
+			"item": [
+				{
+					"name": "Create Post",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"Il mio primo post di prova\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/posts",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "posts"]
+						}
+					},
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const body = pm.response.json();",
+									"    pm.collectionVariables.set('postId', body.id);",
+									"}"
+								]
+							}
+						}
+					],
+					"response": []
+				},
+				{
+					"name": "Get All Posts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/posts",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "posts"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Post By Id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/posts/{{postId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "posts", "{{postId}}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Post",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"Contenuto del post aggiornato\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/posts/{{postId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "posts", "{{postId}}"]
+						}
+					},
+					"response": []
+				}
+			]
 		},
 		{
 			"name": "Likes",
